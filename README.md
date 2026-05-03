@@ -1,0 +1,101 @@
+# Dreamlane BD - Supershop Management System
+
+A lightweight POS + Inventory Management System with QR code scanning, product management, stock tracking, and sales transaction recording.
+
+## Tech Stack
+
+- **Frontend:** HTML5, CSS3, Vanilla JavaScript
+- **Backend:** Node.js, Express.js
+- **Database:** MySQL (TiDB Cloud compatible)
+- **Image Storage:** Cloudinary
+- **QR Code:** qrcode (generation), html5-qrcode (scanning)
+- **Auth:** JWT + bcrypt
+
+## Setup
+
+### 1. Clone and install dependencies
+
+```bash
+cd backend
+npm install
+```
+
+### 2. Configure environment variables
+
+Copy the example env file and fill in your credentials:
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` with your MySQL and Cloudinary credentials.
+
+### 3. Create MySQL database
+
+```sql
+CREATE DATABASE dreamlane_bd;
+```
+
+Tables are created automatically when the server starts.
+
+### 4. Start the server
+
+```bash
+# Development (with auto-reload)
+npm run dev
+
+# Production
+npm start
+```
+
+The app will be available at `http://localhost:3000`
+
+### 5. Default login credentials
+
+- **Email:** admin@dreamlane.com
+- **Password:** admin123
+
+## Features
+
+- Admin authentication (JWT)
+- Product CRUD with image upload (Cloudinary)
+- Automatic QR code generation per product
+- Mobile camera QR scanner (html5-qrcode)
+- Sell / Add Stock via QR scan
+- Transaction history logging
+- Dashboard with stats (total products, daily sales, low stock alerts)
+- Search and filter products
+- Dark / Light mode toggle
+- Fully responsive (mobile + desktop)
+- Concurrent scan safety (DB transactions with row locking)
+
+## Project Structure
+
+```
+Dreamlane BD Project/
+  backend/
+    config/        - Database and Cloudinary config
+    middleware/    - Auth and upload middleware
+    routes/        - API route handlers
+    server.js      - Express entry point
+  frontend/
+    css/           - Stylesheets
+    js/            - JavaScript modules
+    *.html         - Page templates
+```
+
+## API Endpoints
+
+| Method | Endpoint                | Description              |
+|--------|-------------------------|--------------------------|
+| POST   | /api/auth/login         | Admin login              |
+| GET    | /api/auth/me            | Current user info        |
+| GET    | /api/products           | List products            |
+| GET    | /api/products/categories| Get categories           |
+| GET    | /api/products/:id       | Get single product       |
+| POST   | /api/products           | Create product           |
+| PUT    | /api/products/:id       | Update product           |
+| DELETE | /api/products/:id       | Delete product           |
+| POST   | /api/scan               | Scan action (sell/add)   |
+| GET    | /api/transactions       | Transaction history      |
+| GET    | /api/transactions/dashboard | Dashboard stats      |
