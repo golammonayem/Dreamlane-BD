@@ -30,7 +30,16 @@ cp .env.example .env
 
 Edit `.env` with your MySQL and Cloudinary credentials.
 
-### 3. Create MySQL database
+### 3. Run MySQL
+
+Option A: Docker (local dev)
+
+```bash
+cd database
+docker compose up -d
+```
+
+Option B: Existing MySQL server
 
 ```sql
 CREATE DATABASE dreamlane_bd;
@@ -78,6 +87,9 @@ Dreamlane BD Project/
     middleware/    - Auth and upload middleware
     routes/        - API route handlers
     server.js      - Express entry point
+  database/
+    docker-compose.yml - Local MySQL container
+    init/           - Init scripts
   frontend/
     css/           - Stylesheets
     js/            - JavaScript modules
