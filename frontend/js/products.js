@@ -82,7 +82,7 @@ function initProductForm() {
     var closeBtn = modal.querySelector('.modal-close');
     var cancelBtn = document.getElementById('cancel-product');
     var imageInput = document.getElementById('product-image');
-    var previewArea = document.getElementById('image-preview');
+    var previewArea = document.getElementById('preview-content');
     var searchInput = document.getElementById('search-input');
     var categoryFilter = document.getElementById('filter-category');
 
@@ -163,7 +163,7 @@ async function editProduct(id) {
         document.getElementById('product-quantity').value = p.quantity;
         document.getElementById('product-category').value = p.category || '';
 
-        var previewArea = document.getElementById('image-preview');
+        var previewArea = document.getElementById('preview-content');
         if (p.image_url) {
             previewArea.innerHTML = '<img class="preview-img" src="' + p.image_url + '" alt="Preview">';
         } else {
