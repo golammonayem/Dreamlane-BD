@@ -20,9 +20,9 @@ router.get('/', authMiddleware, async (req, res) => {
             query += ' WHERE DATE(t.created_at) = CURDATE()';
         }
 
-        query += ' ORDER BY t.created_at DESC LIMIT ?';
+        query += ` ORDER BY t.created_at DESC LIMIT ${limit}`;
 
-        const [transactions] = await pool.execute(query, [String(limit)]);
+        const [transactions] = await pool.execute(query);
         res.json({ transactions });
     } catch (err) {
         console.error('[Transactions] List error:', err);
