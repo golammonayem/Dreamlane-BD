@@ -54,3 +54,36 @@ function logout() {
     localStorage.removeItem('dreamlane_token');
     window.location.href = '/login.html';
 }
+// Global password modal functions
+function openPasswordModal() {
+    document.getElementById('password-form').reset();
+    document.getElementById('password-modal').classList.add('active');
+}
+
+function closePasswordModal() {
+    document.getElementById('password-modal').classList.remove('active');
+}
+
+async function handlePasswordChange(e) {
+    e.preventDefault();
+    var btn = document.getElementById('submit-password');
+    var current = document.getElementById('current-password').value;
+    var newPass = document.getElementById('new-password').value;
+    btn.disabled = true;
+
+    try {
+        var data = await apiFetch('/api/auth/password', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ currentPassword: current, newPassword: newPass })
+        });
+        if (data) {
+            showToast(data.message, 'success');
+            closePasswordModal();
+        }
+    } catch (err) {
+        showToast(err.message, 'error');
+    } finally {
+        btn.disabled = false;
+    }
+}

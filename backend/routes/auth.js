@@ -68,4 +68,31 @@ router.get('/me', authMiddleware, async (req, res) => {
     }
 });
 
+// PUT /api/auth/password
+router.put('/password', authMiddleware, async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+        if (!currentPassword || !newPassword) {
+            return res.status(400).json({ error: 'Current and new password are required.' });
+        }
+        if (newPassword.length < 6) {
+            return res.status(400).json({ error: 'New password must be at least 6 characters.' });
+        }
+
+        const [users] = await pool.execute('SELECT password FROM users WHERE id = ?', [req.user.id]);
+        if (users.length === 0) return res.status(404).json({ error: 'User not found.' });
+
+        const isMatch = await bcrypt.compare(currentPassword, users[0].password);
+        if (!isMatch) return res.status(401).json({ error: 'Incorrect current password.' });
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        await pool.execute('UPDATE users SET password = ? WHERE id = ?', [hashedPassword, req.user.id]);
+
+        res.json({ message: 'Password updated successfully.' });
+    } catch (err) {
+        console.error('[Auth] Password update error:', err);
+        res.status(500).json({ error: 'Failed to update password.' });
+    }
+});
+
 module.exports = router;
