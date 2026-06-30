@@ -21,7 +21,7 @@ async function apiFetch(endpoint, options = {}) {
 
         if (response.status === 401) {
             localStorage.removeItem('dreamlane_token');
-            window.location.href = '/index.html';
+            window.location.href = '/login.html';
             return null;
         }
 
@@ -44,7 +44,7 @@ async function apiFetch(endpoint, options = {}) {
 function requireAuth() {
     const token = localStorage.getItem('dreamlane_token');
     if (!token) {
-        window.location.href = '/index.html';
+        window.location.href = '/login.html';
         return false;
     }
     return true;
@@ -52,5 +52,5 @@ function requireAuth() {
 
 function logout() {
     localStorage.removeItem('dreamlane_token');
-    window.location.href = '/index.html';
+    window.location.href = '/login.html';
 }

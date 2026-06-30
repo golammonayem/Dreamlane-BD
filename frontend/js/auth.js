@@ -1,7 +1,7 @@
 // Login page logic
 document.addEventListener('DOMContentLoaded', function() {
-    // If already logged in, redirect to dashboard
-    if (localStorage.getItem('dreamlane_token')) {
+    // If already logged in and on login page, redirect to dashboard
+    if (localStorage.getItem('dreamlane_token') && window.location.pathname.includes('login')) {
         window.location.href = '/dashboard.html';
         return;
     }

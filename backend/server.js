@@ -9,6 +9,8 @@ const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
 const scanRoutes = require('./routes/scan');
 const transactionRoutes = require('./routes/transactions');
+const shopRoutes = require('./routes/shop');
+const orderRoutes = require('./routes/orders');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -21,7 +23,11 @@ app.use(express.urlencoded({ extended: true }));
 // Serve frontend static files
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
 
-// API Routes
+// API Routes — Public
+app.use('/api/shop', shopRoutes);
+app.use('/api/orders', orderRoutes);
+
+// API Routes — Auth required
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/scan', scanRoutes);
