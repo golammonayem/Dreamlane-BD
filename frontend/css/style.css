@@ -1161,3 +1161,16 @@ tbody tr:hover { background: rgba(37,99,235,0.04); }
     .shop-grid { grid-template-columns: 1fr; }
     .hero-content h1 { font-size: 1.5rem; }
 }
+
+/* Brand Logo */
+.brand-logo {
+    max-height: 40px;
+    width: auto;
+    object-fit: contain;
+}
+.sidebar-header .brand-logo {
+    max-height: 45px;
+}
+.footer-brand .brand-logo {
+    max-height: 50px;
+}
