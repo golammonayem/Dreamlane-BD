@@ -59,6 +59,8 @@ npm start
 
 The app will be available at `http://localhost:3000`
 
+For the Render deployment, set `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME` to your production database values. TiDB Cloud commonly uses port `4000` with `DB_SSL=true`; do not leave `DB_PORT` unset because the backend defaults to `3306`.
+
 ### 5. Keep the Render service awake
 
 The repository includes a scheduled GitHub Actions workflow at `.github/workflows/keep-alive.yml` that pings the public health endpoint every 10 minutes. To enable it:
