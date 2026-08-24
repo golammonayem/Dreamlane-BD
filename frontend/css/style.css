@@ -95,6 +95,27 @@ input, select, textarea { font-family: inherit; }
     font-size: 0.875rem;
     margin-top: 4px;
 }
+.password-field { position: relative; }
+.password-field .form-control { padding-right: 48px; }
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 0;
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+}
+.password-toggle:hover,
+.password-toggle:focus-visible { color: var(--text-primary); background: var(--border-color); }
+.password-toggle:focus-visible { outline: 2px solid var(--primary); outline-offset: 1px; }
+.password-toggle-icon { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
 /* ===== Layout ===== */
 .app-layout { display: flex; min-height: 100vh; }

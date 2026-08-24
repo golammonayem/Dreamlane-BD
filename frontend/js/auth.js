@@ -9,8 +9,16 @@ document.addEventListener('DOMContentLoaded', function() {
     var form = document.getElementById('login-form');
     var emailInput = document.getElementById('login-email');
     var passwordInput = document.getElementById('login-password');
+    var passwordToggle = document.getElementById('password-toggle');
     var errorEl = document.getElementById('login-error');
     var submitBtn = document.getElementById('login-btn');
+
+    passwordToggle.addEventListener('click', function() {
+        var isVisible = passwordInput.type === 'text';
+        passwordInput.type = isVisible ? 'password' : 'text';
+        passwordToggle.setAttribute('aria-label', isVisible ? 'Show password' : 'Hide password');
+        passwordToggle.setAttribute('aria-pressed', String(!isVisible));
+    });
 
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
