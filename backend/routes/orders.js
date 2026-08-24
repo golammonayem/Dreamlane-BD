@@ -147,6 +147,8 @@ router.get('/stats', authMiddleware, async (req, res) => {
 
 // PUT /api/orders/:id/status — Admin: update order status
 router.put('/:id/status', authMiddleware, async (req, res) => {
+    const connection = await pool.getConnection();
+
     try {
         const { id } = req.params;
         const { status } = req.body;
@@ -156,23 +158,41 @@ router.put('/:id/status', authMiddleware, async (req, res) => {
             return res.status(400).json({ error: 'Invalid status. Must be: ' + validStatuses.join(', ') });
         }
 
-        const [existing] = await pool.execute('SELECT * FROM orders WHERE id = ?', [id]);
+        await connection.beginTransaction();
+
+        const [existing] = await connection.execute(
+            'SELECT * FROM orders WHERE id = ? FOR UPDATE',
+            [id]
+        );
         if (existing.length === 0) {
+            await connection.rollback();
             return res.status(404).json({ error: 'Order not found.' });
         }
 
-        // If cancelling, restore the stock
-        if (status === 'cancelled' && existing[0].status !== 'cancelled') {
-            await pool.execute(
+        const currentStatus = existing[0].status;
+        if (currentStatus === 'cancelled' && status !== 'cancelled') {
+            await connection.rollback();
+            return res.status(400).json({ error: 'Cancelled orders cannot be reactivated.' });
+        }
+
+        // Cancellation returns stock and records the adjustment atomically.
+        if (status === 'cancelled' && currentStatus !== 'cancelled') {
+            await connection.execute(
                 'UPDATE products SET quantity = quantity + ? WHERE id = ?',
                 [existing[0].quantity, existing[0].product_id]
             );
+            await connection.execute(
+                'INSERT INTO transactions (product_id, action_type, quantity) VALUES (?, ?, ?)',
+                [existing[0].product_id, 'add', existing[0].quantity]
+            );
         }
 
-        await pool.execute(
+        await connection.execute(
             'UPDATE orders SET status = ? WHERE id = ?',
             [status, id]
         );
+
+        await connection.commit();
 
         const [updated] = await pool.execute('SELECT * FROM orders WHERE id = ?', [id]);
 
@@ -181,8 +201,11 @@ router.put('/:id/status', authMiddleware, async (req, res) => {
             order: updated[0]
         });
     } catch (err) {
+        await connection.rollback();
         console.error('[Orders] Status update error:', err);
         res.status(500).json({ error: 'Failed to update order status.' });
+    } finally {
+        connection.release();
     }
 });
 
