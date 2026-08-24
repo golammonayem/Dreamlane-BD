@@ -1,0 +1,23 @@
+name: Keep Dreamlane BD Awake
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping health endpoint
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
+        run: |
+          if [ -z "$APP_URL" ]; then
+            echo "APP_URL repository secret is not configured."
+            exit 1
+          fi
+
+          curl --fail --silent --show-error --max-time 30 \
+            --retry 2 --retry-delay 5 \
+            "${APP_URL%/}/api/health"

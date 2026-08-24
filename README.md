@@ -59,7 +59,15 @@ npm start
 
 The app will be available at `http://localhost:3000`
 
-### 5. Default login credentials
+### 5. Keep the Render service awake
+
+The repository includes a scheduled GitHub Actions workflow at `.github/workflows/keep-alive.yml` that pings the public health endpoint every 10 minutes. To enable it:
+
+1. Open the repository's **Settings > Secrets and variables > Actions**.
+2. Add a repository secret named `APP_URL` containing the deployed URL, for example `https://dreamlane-bd.onrender.com`.
+3. Run **Actions > Keep Dreamlane BD Awake > Run workflow** once to verify the setup.
+
+### 6. Default login credentials
 
 - **Email:** admin@dreamlane.com
 - **Password:** admin123
