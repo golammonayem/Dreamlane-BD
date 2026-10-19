@@ -18,6 +18,18 @@ jobs:
             exit 1
           fi
 
-          curl --fail --silent --show-error --max-time 30 \
+          HEALTH_URL="${APP_URL%/}/api/health"
+          HTTP_STATUS=$(curl --silent --show-error --max-time 30 \
             --retry 2 --retry-delay 5 \
-            "${APP_URL%/}/api/health"
+            --output /dev/null --write-out "%{http_code}" \
+            "$HEALTH_URL" || echo "000")
+
+          if [ "$HTTP_STATUS" = "429" ]; then
+            echo "Health endpoint is rate-limited (429); treating as successful keep-alive ping."
+            exit 0
+          fi
+
+          if [[ ! "$HTTP_STATUS" =~ ^2 ]]; then
+            echo "Health check failed with HTTP status: $HTTP_STATUS"
+            exit 1
+          fi
